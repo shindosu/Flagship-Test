@@ -10,9 +10,10 @@
   {{ content_for_header }} <!-- Header hook for plugins -->
   {{ 'application.scss.css' | asset_url | stylesheet_tag }}
   {{ 'application.js' | asset_url | script_tag }}
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js' | script_tag }}
 </head>
 <body>
-
+  <h1>Hello from theme kit</h1>
   {% for link in linklists.main-menu.links %}
     {% assign child_list_handle = link.title | handleize %}
     {% if linklists[child_list_handle].links != blank %}
@@ -25,8 +26,7 @@
     {% endif %}
   {% endfor %}
 
-  <a href="/cart">cart</a>
-
+  <a id="cart" href="/cart">cart <p id="item_count">{{%cart.item_count + 1%}}</p></a>
   {% if shop.customer_accounts_enabled %}
     {% if customer %}
       <a href="/account">account</a>
