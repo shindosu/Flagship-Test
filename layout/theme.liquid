@@ -10,10 +10,9 @@
   {{ content_for_header }} <!-- Header hook for plugins -->
   {{ 'application.scss.css' | asset_url | stylesheet_tag }}
   {{ 'application.js' | asset_url | script_tag }}
-  {{ '//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js' | script_tag }}
 </head>
 <body>
-  <h1>Hello from theme kit</h1>
+  <h1>Taisei's shop here we are</h1>
   {% for link in linklists.main-menu.links %}
     {% assign child_list_handle = link.title | handleize %}
     {% if linklists[child_list_handle].links != blank %}
@@ -37,8 +36,15 @@
     {% endif %}
   {% endif %}
 
+  <div id="random-text">
+    <h1>{{settings.random_title}}</h1>
+  </div>
   <main role="main">
     {{ content_for_layout }}
   </main>
 </body>
+<script>
+  const text = document.getElementById("random-text").innerText;
+  console.log(text);
+</script>
 </html>
