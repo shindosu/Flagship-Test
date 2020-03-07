@@ -24,9 +24,17 @@
   {{ current_variant.price | money }}
   <label for="Quantity">quantity</label>
   <input type="number" id="Quantity" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="AddToCart">Add to cart</button>
+  {% if current_variant.available%}
+     {% if current_variant.inventory_quantity < 5%}
+     <button type="submit" name="add" id="LowStockButton" class="btn btn-primary"></5>Low Stock</button>
+     {%else%}
+     <button type="submit" name="add" id="AddToCart" class="btn btn-success"></5>Add to cart</button>
+     {%endif%}
+  {%else%}
+    <button type="submit" name="add" id="noStockButton" class="btn btn-secondary" disabled></5>No Stock</button>
+  {%endif%}
 </form>
-<div>{{ product.description }} {{product}} </div>
+<div>{{ product.description }}</div>
 
 {% for variant in product.variants %}
   <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -107,5 +115,15 @@
         .catch((error) => {
           console.log(error);
         });
+  });
+
+  const addToCartButton = document.getElementById("AddToCart");
+  addToCartButton.addEventListener("mouseover", function(){
+    addToCartButton.classList.remove("btn-success");
+    addToCartButton.classList.add("btn-primary");
+  });
+  addToCartButton.addEventListener("mouseleave", function(){
+    addToCartButton.classList.remove("btn-primary");
+    addToCartButton.classList.add("btn-success");
   });
 </script>
