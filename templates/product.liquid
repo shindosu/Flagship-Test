@@ -26,10 +26,67 @@
   <input type="number" id="Quantity" name="quantity" value="1" min="1">
   <button type="submit" name="add" id="AddToCart">Add to cart</button>
 </form>
-<div>{{ product.description }}</div>
+<div>{{ product.description }} {{product}} </div>
+
+{% for variant in product.variants %}
+  <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          {% if variant.available%}
+          <p>There are {{ variant.inventory_quantity }} stocks of {{product.title}} left.</p>
+          {% else %}
+          <p>{{product.title}} is sold out</p>
+          {% endif %}
+
+          <p>Total amount in the cart is: {{cart.item_count}}</p>
+          <table>
+            <thead>
+              <th colspan="2">Prod</th>
+              <th>Name</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
+            </thead>
+            <tbody>
+                <tr>
+                  {% for item in cart.items %}
+                  <td>
+                    <a href="{{ item.url }}">{{ item.product.title }}</a>
+                    {{ item.variant.title }}
+                  </td>
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ item.price * item.quantity | money }}</td>
+                  {% endfor %}
+                  <td>
+                    {{ cart.total_price | money }}
+                  </td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
+  window.addEventListener('load', function(e){
+    $('#modal').modal('show');
+  })
+
   const form = document.getElementById("AddToCartForm");
   form.addEventListener("submit", function(event){
     event.preventDefault();
