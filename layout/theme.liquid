@@ -36,10 +36,13 @@
       {{ 'register' | customer_register_link }}
     {% endif %}
   {% endif %}
+  <a href="https://taisei-flagship.myshopify.com/pages/contact-us">Contact Us</a>
 
   <div id="random-text">
     <h1>{{settings.random_title}}</h1>
   </div>
+
+  {% section 'text-cart'%}
   <main role="main">
     {{ content_for_layout }}
   </main>
