@@ -1,11 +1,11 @@
+<!-- Task b extra ii-->
 <div id="select-collection">
-  <h2>{{section.settings.header}} - <i>Task b Extra ii</i></h2>
+  <h2>{{section.settings.header}}</h2>
   <ul>
     {% for collection in collections %}
       <li>
         <a href="{{ collection.url }}" class = "btn btn-primary" id="{{collection.title | downcase | replace: " ", "-"}}">{{ collection.title }}</a>
       </li>
-
       <div class="collection_info" id="{{collection.title | downcase | replace: " ", "-"}}-info" style="display:none">
         {% for product in collection.products %}
           <div class="product">
@@ -14,11 +14,9 @@
             {% unless product.available %}<br><strong>sold out</strong>{% endunless %}
             <a href="{{ product.url | within: collection }}">
             <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
-          </a>
-        </div>
-      {% else %}
-        <p>no matches</p>
-      {% endfor %}
+            </a>
+          </div>
+        {% endfor %}
       </div>
     {% endfor %}  
   </ul>
