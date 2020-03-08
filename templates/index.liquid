@@ -1,3 +1,5 @@
+{% section 'select_collection'%}
+
 {% for product in collections.frontpage.products limit:4 %}
   <div>
     <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
@@ -8,3 +10,20 @@
     </a>
   </div>
 {% endfor %}
+
+<script>
+  const div_array = document.getElementsByTagName("div");
+  let last_div = div_array[div_array.length-1];
+  document.getElementById("select-collection").addEventListener("click", function(event){
+    event.preventDefault();
+    let id=event.target.id;
+    const info = document.querySelectorAll(".collection_info");
+    info.forEach((item) => {
+      if (item.id.includes(id)){
+        let inner = document.getElementById(item.id).innerHTML
+        last_div.innerHTML = inner;
+      }
+    });
+  });
+
+</script>

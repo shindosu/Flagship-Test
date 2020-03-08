@@ -1,12 +1,25 @@
 <div id="select-collection">
-  <h2>Select Collection to be displayed :</h2>
-  <h2>{{section.settings.text-box}}</h2>
+  <h2>{{section.settings.header}}</h2>
   <ul>
     {% for collection in collections %}
       <li>
-        <a href="{{ collection.url }}">{{ collection.title }}</a>
-        <a href="{{block.settings.link}}" class = "btn btn-primary">{{block.settings.linktext}}</a>
+        <a href="{{ collection.url }}" class = "btn btn-primary" id="{{collection.title | downcase | replace: " ", "-"}}">{{ collection.title }}</a>
       </li>
+
+      <div class="collection_info" id="{{collection.title | downcase | replace: " ", "-"}}-info" style="display:none">
+        {% for product in collection.products %}
+          <div class="product">
+            <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+            {{ product.price | money }}
+            {% unless product.available %}<br><strong>sold out</strong>{% endunless %}
+            <a href="{{ product.url | within: collection }}">
+            <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
+          </a>
+        </div>
+      {% else %}
+        <p>no matches</p>
+      {% endfor %}
+      </div>
     {% endfor %}  
   </ul>
 </div>
@@ -16,21 +29,10 @@
     "name": "Collection",
     "settings": [
     {
-      "id": "text-box",
+      "id": "header",
       "type": "text",
-      "label": "Heading",
-      "default": "Title"
-    },
-    {
-      "id": "link",
-      "type": "url",
-      "label": "Button Link"
-    },
-    {
-      "id": "linktext",
-      "type": "text",
-      "label": "Button text",
-      "default": "Click here"
+      "label": "Title",
+      "default": "Select Collection to be Displayed:"
     }]
   }
 {% endschema %}
