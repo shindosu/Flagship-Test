@@ -1,0 +1,42 @@
+<div id="select-collection">
+  <h2>Select Collection to be displayed :</h2>
+  <h2>{{section.settings.text-box}}</h2>
+  <ul>
+    {% for collection in collections %}
+      <li>
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+        <a href="{{block.settings.link}}" class = "btn btn-primary">{{block.settings.linktext}}</a>
+      </li>
+    {% endfor %}  
+  </ul>
+</div>
+
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    },
+    {
+      "id": "link",
+      "type": "url",
+      "label": "Button Link"
+    },
+    {
+      "id": "linktext",
+      "type": "text",
+      "label": "Button text",
+      "default": "Click here"
+    }]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
