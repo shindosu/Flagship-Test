@@ -29,12 +29,12 @@
   <!--Task a, extra i & extra ii. AJAX in script tag on bottom-->
   {% if current_variant.available%}
     {% if current_variant.inventory_quantity < 5%}
-    <button type="submit" name="add" id="LowStockButton" class="btn btn-primary"></5>Low Stock</button>
+    <button type="submit" name="add" id="LowStockButton" class="btn btn-primary">Low Stock</button>
     {%else%}
-    <button type="submit" name="add" id="AddToCart" class="btn btn-success"></5>Add to cart</button>
+    <button type="submit" name="add" id="AddToCart" class="btn btn-success">Add to cart</button>
     {%endif%}
   {%else%}
-    <button type="submit" name="add" id="noStockButton" class="btn btn-secondary" disabled></5>No Stock</button>
+    <button type="submit" name="add" id="noStockButton" class="btn btn-secondary" disabled>No Stock</button>
   {%endif%}
 </form>
 <div>{{ product.description }}</div>
