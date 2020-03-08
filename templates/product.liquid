@@ -6,6 +6,7 @@
     <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
   </a>
 {% endfor %}
+
 <h1>{{ product.title }} </h1>
 <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
   <select name="id" id="productSelect">
@@ -24,19 +25,21 @@
   {{ current_variant.price | money }}
   <label for="Quantity">quantity</label>
   <input type="number" id="Quantity" name="quantity" value="1" min="1">
+
+  <!--Task a, extra i & extra ii. AJAX in script tag on bottom-->
   {% if current_variant.available%}
-     {% if current_variant.inventory_quantity < 5%}
-     <button type="submit" name="add" id="LowStockButton" class="btn btn-primary"></5>Low Stock</button>
-     {%else%}
-     <button type="submit" name="add" id="AddToCart" class="btn btn-success"></5>Add to cart</button>
-     {%endif%}
+    {% if current_variant.inventory_quantity < 5%}
+    <button type="submit" name="add" id="LowStockButton" class="btn btn-primary"></5>Low Stock</button>
+    {%else%}
+    <button type="submit" name="add" id="AddToCart" class="btn btn-success"></5>Add to cart</button>
+    {%endif%}
   {%else%}
     <button type="submit" name="add" id="noStockButton" class="btn btn-secondary" disabled></5>No Stock</button>
   {%endif%}
 </form>
 <div>{{ product.description }}</div>
 
-{% for variant in product.variants %}
+<!-- Modal -->
   <div class="modal fade" tabindex="-1" role="dialog" id="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -47,36 +50,32 @@
           </button>
         </div>
         <div class="modal-body">
-          {% if variant.available%}
-          <p>There are {{ variant.inventory_quantity }} stocks of {{product.title}} left.</p>
+          {% if current_variant.available%}
+          <p>There are {{ current_variant.inventory_quantity }} stocks of {{product.title}} left.</p>
           {% else %}
           <p>{{product.title}} is sold out</p>
           {% endif %}
 
           <p>Total amount in the cart is: {{cart.item_count}}</p>
+          <h2>Cart Status</h2>
           <table>
             <thead>
               <th colspan="2">Prod</th>
-              <th>Name</th>
               <th>Qty</th>
               <th>Price</th>
               <th>Total</th>
             </thead>
             <tbody>
+              {% for item in cart.items %}
                 <tr>
-                  {% for item in cart.items %}
-                  <td>
-                    <a href="{{ item.url }}">{{ item.product.title }}</a>
-                    {{ item.variant.title }}
-                  </td>
+                  <td> <a href="{{ item.url }}">{{ item.product.title }}</a> </td>
                   <td>{{ item.quantity }}</td>
-                  <td>{{ item.price * item.quantity | money }}</td>
-                  {% endfor %}
-                  <td>
-                    {{ cart.total_price | money }}
-                  </td>
+                  <td>{{ item.price | times: item.quantity | money }}</td>
                 </tr>
-              
+                {% endfor %}
+                  <tr>
+                    <td> {{ cart.total_price | money }} </td>
+                  </tr>
             </tbody>
           </table>
         </div>
@@ -86,43 +85,45 @@
       </div>
     </div>
   </div>
-{% endfor %}
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
-  window.addEventListener('load', function(e){
+  // Modal pops up when the product page loads
+  window.addEventListener('load', () => {
     $('#modal').modal('show');
-  })
-
-  const form = document.getElementById("AddToCartForm");
-  form.addEventListener("submit", function(event){
-    event.preventDefault();
-    axios.post(
-        '/cart/add',
-        {
-          id: document.getElementById("productSelect").value,
-          quantity: document.getElementById("Quantity").value
-        }
-      )
-        .then((response) => {
-          console.log(response);
-          let cart_num = document.getElementById("item_count");
-          const quantity = parseInt(document.getElementById("Quantity").value);
-          const new_val = parseInt(cart_num.innerText) + quantity;
-          cart_num.innerText = new_val;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
   });
 
+  // AJAX request of add to cart using axios
+  const form = document.getElementById("AddToCartForm");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    axios.post(
+      '/cart/add',
+      {
+        id: document.getElementById("productSelect").value,
+        quantity: document.getElementById("Quantity").value
+      }
+    )
+      .then((response) => {
+        console.log(response);
+        let cart_num = document.getElementById("item_count");
+        const quantity = parseInt(document.getElementById("Quantity").value);
+        const new_val = parseInt(cart_num.innerText) + quantity;
+        cart_num.innerText = new_val;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+
+  // Change button color if stock > 5
   const addToCartButton = document.getElementById("AddToCart");
-  addToCartButton.addEventListener("mouseover", function(){
+  addToCartButton.addEventListener("mouseover", () => {
     addToCartButton.classList.remove("btn-success");
     addToCartButton.classList.add("btn-primary");
   });
-  addToCartButton.addEventListener("mouseleave", function(){
+  addToCartButton.addEventListener("mouseleave", () => {
     addToCartButton.classList.remove("btn-primary");
     addToCartButton.classList.add("btn-success");
   });
